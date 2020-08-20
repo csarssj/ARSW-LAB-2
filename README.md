@@ -58,3 +58,31 @@ Thread control with wait/notify. Producer/consumer
 	  ```
 
 3. Make the producer now produce very fast, and the consumer consumes slow. Taking into account that the producer knows a Stock limit (how many elements he should have, at most in the queue), make that limit be respected. Review the API of the collection used as a queue to see how to ensure that this limit is not exceeded. Verify that, by setting a small limit for the 'stock', there is no high CPU consumption or errors.
+
+	- Se modifico el numero de "stocks" a 5 y agregando un condicional en el Producer para que no agregue más si se alcanza el límite. Además se ralentizo la velocidad   		del consumer, dando como resulado un consumo mínimo de la CPU y sin presentarse nigún error.
+	
+	![image](https://github.com/csarssj/ARSW-LAB-2/blob/master/resources/1.png)
+	
+	![image](https://github.com/csarssj/ARSW-LAB-2/blob/master/resources/2.png)
+	- Producer: 
+	  
+	  ```java
+	  @Override
+	  public void run() {
+	  	while (true) {
+			if(queue.size() < stockLimit){
+				dataSeed = dataSeed + rand.nextInt(100);
+		    		System.out.println("Producer added " + dataSeed);
+		    		synchronized(queue) {
+					queue.add(dataSeed);
+					queue.notifyAll();
+			    	}
+			}
+		    	try {
+				Thread.sleep(500);
+		    	} catch (InterruptedException ex) {
+				Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+		    	}
+		}
+	    }  	
+	  ```
