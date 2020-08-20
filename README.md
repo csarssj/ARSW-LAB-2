@@ -15,7 +15,7 @@ Thread control with wait/notify. Producer/consumer
 	
 	![image](https://github.com/csarssj/ARSW-LAB-2/blob/master/resources/2.png)
 	
-	     - Consumer: 
+	- Consumer: 
 			```java
 			 @Override
 			public void run() {
@@ -36,7 +36,7 @@ Thread control with wait/notify. Producer/consumer
 				}
 			}
 			```
-		- Producer: 
+	- Producer: 
 			```java
 			@Override
 			public void run() {
