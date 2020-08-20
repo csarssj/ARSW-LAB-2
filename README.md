@@ -7,7 +7,7 @@ Thread control with wait/notify. Producer/consumer
 	
 	- Este Consumo se debe a las clases producer y comsumer, mienstras producer tiene un limite de stock consumer siempre esta preguntando y pidiendo productos habiendo o no en la cola de produccion
 	
-	![image](https://github.com/csarssj/ARSW-LAB-1/blob/master/resources/1.png)
+	![image](https://github.com/csarssj/ARSW-LAB-2/blob/master/resources/1.png)
 	
 	
 	
