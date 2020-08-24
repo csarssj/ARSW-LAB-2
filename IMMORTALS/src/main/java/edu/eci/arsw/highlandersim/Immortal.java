@@ -16,6 +16,8 @@ public class Immortal extends Thread {
     private final String name;
 
     private final Random r = new Random(System.currentTimeMillis());
+   
+    private boolean pause;
 
 
     public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
@@ -25,30 +27,42 @@ public class Immortal extends Thread {
         this.immortalsPopulation = immortalsPopulation;
         this.health = health;
         this.defaultDamageValue=defaultDamageValue;
+        this.pause=false;
     }
 
     public void run() {
 
         while (true) {
-            Immortal im;
-
-            int myIndex = immortalsPopulation.indexOf(this);
-
-            int nextFighterIndex = r.nextInt(immortalsPopulation.size());
-
-            //avoid self-fight
-            if (nextFighterIndex == myIndex) {
-                nextFighterIndex = ((nextFighterIndex + 1) % immortalsPopulation.size());
-            }
-
-            im = immortalsPopulation.get(nextFighterIndex);
-
-            this.fight(im);
-
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        	while(!pause) {
+	            Immortal im;
+	
+	            int myIndex = immortalsPopulation.indexOf(this);
+	
+	            int nextFighterIndex = r.nextInt(immortalsPopulation.size());
+	
+	            //avoid self-fight
+	            if (nextFighterIndex == myIndex) {
+	                nextFighterIndex = ((nextFighterIndex + 1) % immortalsPopulation.size());
+	            }
+	
+	            im = immortalsPopulation.get(nextFighterIndex);
+	
+	            this.fight(im);
+	
+	            try {
+	                Thread.sleep(1);
+	            } catch (InterruptedException e) {
+	                e.printStackTrace();
+	            }
+        	}
+            synchronized(this) {
+            	if (pause) {
+    				try {
+    					wait(); // wait FOREVER for data
+    				} catch (InterruptedException ex) {
+    					ex.printStackTrace();
+		            }
+		        }	
             }
 
         }
@@ -80,5 +94,12 @@ public class Immortal extends Thread {
 
         return name + "[" + health + "]";
     }
-
+    public synchronized void resumen() {
+    	this.pause = false;
+    	this.notifyAll();
+    }
+    public synchronized void pause() {
+    	this.pause = true;
+    	this.notifyAll();
+    }
 }
