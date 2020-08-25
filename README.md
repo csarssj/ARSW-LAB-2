@@ -206,7 +206,7 @@ you must analyze what was done in step 4.
 
 11.  To finish, implement the STOP option.
 
-    ```java
+     ```java
         JButton btnStop = new JButton("STOP");
         btnStop.setForeground(Color.RED);
         btnStop.addActionListener(new ActionListener() {
@@ -217,4 +217,4 @@ you must analyze what was done in step 4.
 
             }
         });
-    ```
+       ```
