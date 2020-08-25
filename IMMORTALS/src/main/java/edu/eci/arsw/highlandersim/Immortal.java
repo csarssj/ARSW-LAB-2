@@ -18,6 +18,8 @@ public class Immortal extends Thread {
     private final Random r = new Random(System.currentTimeMillis());
    
     private boolean pause;
+    
+    private boolean isAlive;
 
 
     public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
@@ -28,12 +30,13 @@ public class Immortal extends Thread {
         this.health = health;
         this.defaultDamageValue=defaultDamageValue;
         this.pause=false;
+        this.isAlive=true;
     }
 
     public void run() {
 
         while (true) {
-        	while(!pause) {
+        	while(!pause && isAlive) {
 	            Immortal im;
 	
 	            int myIndex = immortalsPopulation.indexOf(this);
@@ -47,7 +50,7 @@ public class Immortal extends Thread {
 	
 	            im = immortalsPopulation.get(nextFighterIndex);
 	
-	            this.fight(im);
+	            if(isAlive) {this.fight(im);}
 	
 	            try {
 	                Thread.sleep(1);
@@ -70,15 +73,31 @@ public class Immortal extends Thread {
     }
 
     public void fight(Immortal i2) {
-
-        if (i2.getHealth() > 0) {
-            i2.changeHealth(i2.getHealth() - defaultDamageValue);
-            this.health += defaultDamageValue;
-            updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
-        } else {
-            updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
-        }
-
+    	Immortal one ;
+    	Immortal two ;
+    	if(this.getId() < i2.getId()) {
+    		one = i2;
+    		two = this;
+    	}
+    	else{
+    		one = this;
+    		two = i2;
+    	}
+    	if(this.getHealth()<= 0) {
+    		this.isAlive = false;
+    		immortalsPopulation.remove(this);
+    	}
+    	synchronized(one) {
+    		synchronized(two) {
+		        if (i2.getHealth() > 0 && isAlive) {
+		            i2.changeHealth(i2.getHealth() - defaultDamageValue);
+		            this.health += defaultDamageValue;
+		            updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
+		        } else {
+		            updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
+		        }
+    		}
+    	}
     }
 
     public void changeHealth(int v) {
