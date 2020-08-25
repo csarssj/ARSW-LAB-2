@@ -17,10 +17,11 @@ public class Immortal extends Thread {
 
     private final Random r = new Random(System.currentTimeMillis());
    
-    private boolean pause;
+    private boolean pause = false;
     
-    private boolean isAlive;
+    private boolean isAlive = true;
 
+    private boolean stop = false;
 
     public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
         super(name);
@@ -29,14 +30,21 @@ public class Immortal extends Thread {
         this.immortalsPopulation = immortalsPopulation;
         this.health = health;
         this.defaultDamageValue=defaultDamageValue;
-        this.pause=false;
-        this.isAlive=true;
     }
 
     public void run() {
 
         while (true) {
-        	while(!pause && isAlive) {
+        	while(!stop && isAlive) {
+                synchronized(this) {
+                	if (pause) {
+        				try {
+        					wait(); // wait FOREVER for data
+        				} catch (InterruptedException ex) {
+        					ex.printStackTrace();
+    		            }
+    		        }	
+                }
 	            Immortal im;
 	
 	            int myIndex = immortalsPopulation.indexOf(this);
@@ -58,15 +66,6 @@ public class Immortal extends Thread {
 	                e.printStackTrace();
 	            }
         	}
-            synchronized(this) {
-            	if (pause) {
-    				try {
-    					wait(); // wait FOREVER for data
-    				} catch (InterruptedException ex) {
-    					ex.printStackTrace();
-		            }
-		        }	
-            }
 
         }
 
@@ -107,7 +106,10 @@ public class Immortal extends Thread {
     public int getHealth() {
         return health;
     }
-
+    
+    public void setStop() {
+    	this.stop = true;
+    }
     @Override
     public String toString() {
 
