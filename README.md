@@ -114,6 +114,35 @@ To correct this, do whatever is necessary so that, before printing the current
 results, all other threads are paused. Additionally, implement the ‘resume’
 option.
 
+    ```java
+	JButton btnResume = new JButton("Resume");
+
+        btnResume.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	for (Immortal im : immortals) {
+                    im.resumen();
+                }
+
+            }
+        });
+	```
+	
+    ```java
+	JButton btnPauseAndCheck = new JButton("Pause and check");
+        btnPauseAndCheck.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int sum = 0;
+                for (Immortal im : immortals) {
+                    sum += im.getHealth();
+                    im.pause();
+                }
+
+                statisticsLabel.setText("<html>"+immortals.toString()+"<br>Health sum:"+ sum);
+             
+            }
+        });
+	```
+
 5. Check the operation again 
 (click the button many times). Is the invariant fulfilled or not ?.
 
@@ -130,13 +159,44 @@ If so, use the jps and jstack programs to identify why the program stopped.
 
 8. Consider a strategy to correct the problem identified above 
 (you can review Chapter 15 of Java Concurrency in Practice again)
+      
+      ```java
+        public void fight(Immortal i2) {
+    	Immortal one ;
+    	Immortal two ;
+    	if(this.getId() < i2.getId()) {
+    		one = i2;
+    		two = this;
+    	}
+    	else{
+    		one = this;
+    		two = i2;
+    	}
+    	if(this.getHealth()<= 0) {
+    		this.isAlive = false;
+    		immortalsPopulation.remove(this);
+    	}
+    	synchronized(one) {
+    		synchronized(two) {
+		        if (i2.getHealth() > 0 && isAlive) {
+		            i2.changeHealth(i2.getHealth() - defaultDamageValue);
+		            this.health += defaultDamageValue;
+		            updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
+		        } else {
+		            updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
+		        }
+    		}
+    	}
+    }
+	```
+
 
 9. Once the problem is corrected, rectify that the program continues to 
 function consistently when 100, 1000 or 10000 immortals are executed.
 If in these large cases the invariant begins to be breached again, 
 you must analyze what was done in step 4.
     
-  
+    No cambio el invariante en ninguna de las ejecuciones y se mantuvo.
    
 10. An annoying element for the simulation is that at a certain point in it there are few living
  'immortals' making failed fights with 'immortals' already dead.
@@ -145,3 +205,16 @@ you must analyze what was done in step 4.
     2. Correct the previous problem WITHOUT using synchronization, since making access to the shared list of immortals sequential would make simulation extremely slow.
 
 11.  To finish, implement the STOP option.
+
+     ```java
+        JButton btnStop = new JButton("STOP");
+        btnStop.setForeground(Color.RED);
+        btnStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	for (Immortal im : immortals) {
+                    im.setStop();
+                }
+
+            }
+        });
+       ```
