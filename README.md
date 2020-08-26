@@ -1,4 +1,33 @@
 # ARSW-LAB-2
+## Manual de usuario
+
+Si se deseea hacer uso del programa lo primero que debe realizarse el clonar el repositorio almacenado en Github a través del siguiente comando:
+
+```
+git clone https://github.com/csarssj/ARSW-LAB-2.git
+
+```
+O si desea puede descargarlo como archivo zip y luego descomprimirlo en la carpeta que desee.
+
+Una vez hecho alguno de los dos pasos anteriores, nos dirigimos a la ruta de instalación y por medio de la consola digitamos el siguiente comando para compilar:
+
+```
+mvnw package
+```
+y para ejecutar las dos partes ingresamos :
+ * con Java:
+	```
+	java -cp target/ConcurrentPrgExercises-Highlander-Prod-Cons-1.0.jar  edu.eci.arst.concprg.prodcons.StartProduction
+
+	java -cp target/ConcurrentPrgExercises-Highlander-Prod-Cons-1.0.jar  edu.eci.arsw.highlandersim.ControlFrame
+	```
+ * Con Maven:
+ 	```
+	mvn exec:java -Dexec.mainClass="edu.eci.arst.concprg.prodcons.StartProduction"
+
+	mvn exec:java -Dexec.mainClass="edu.eci.arsw.highlandersim.ControlFrame"
+	```
+
 
 ## Part I - Before finishing class
 Thread control with wait/notify. Producer/consumer
@@ -218,3 +247,10 @@ you must analyze what was done in step 4.
             }
         });
        ```
+## Authors
+
+[César González](https://github.com/csarssj) 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/csarssj/ARSW-LAB-2/blob/master/LICENSE) file for details
