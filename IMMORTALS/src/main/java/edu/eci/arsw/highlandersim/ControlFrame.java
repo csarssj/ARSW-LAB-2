@@ -167,7 +167,6 @@ public class ControlFrame extends JFrame {
         }
 
     }
-
 }
 
 class TextAreaUpdateReportCallback implements ImmortalUpdateReportCallback{
